@@ -435,7 +435,13 @@ def config(apps, groups, bind_http_https, ssl_certs, templater,
             logger.debug("adding virtual host for app with id %s", app.appId)
             # remember appids to prevent multiple entries for the same app
             apps_with_http_appid_backend += [app.appId]
-            cleanedUpAppId = re.sub(r'[^a-zA-Z0-9\-]', '_', app.appId)
+
+            # XXX: Apps have a '/' prefix that gets turned into a '_' which we
+            #      can't use when host matching
+            cleanedUpAppId = re.sub(r'[\/]', '', app.appId)
+
+            # Clean up bad chars
+            cleanedUpAppId = re.sub(r'[^a-zA-Z0-9\-]', '_', cleanedUpAppId)
 
             if haproxy_map:
                 if 'map_http_frontend_appid_acl' not in duplicate_map:
