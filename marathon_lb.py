@@ -477,7 +477,9 @@ https://docs.mesosphere.com/services/marathon-lb/advanced/#global-template.\
             logger.debug("adding virtual host for app with id %s", app.appId)
             # remember appids to prevent multiple entries for the same app
             apps_with_http_appid_backend += [app.appId]
-            cleanedUpAppId = re.sub(r'[^a-zA-Z0-9\-]', '_', app.appId)
+
+            # Strip all unwanted chars from hostnames
+            cleanedUpAppId = re.sub(r'[^a-zA-Z0-9\-]', '', app.appId)
 
             if haproxy_map:
                 if 'map_http_frontend_appid_acl' not in duplicate_map:
